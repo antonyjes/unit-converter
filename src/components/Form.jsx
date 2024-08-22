@@ -23,22 +23,22 @@ const unities = {
 
 const values = {
   length: {
-    km: 1000,
     m: 1,
-    cm: 0.01,
-    mm: 0.001,
-    mi: 1609.34,
-    yd: 0.9144,
-    ft: 0.3048,
-    in: 0.0254,
+    cm: 100,
+    mm: 1000,
+    mi: 0.000621371,
+    yd: 1.0936133,
+    ft: 3.2808399,
+    in: 39.3700787,
+    km: 0.001,
   },
 
   weight: {
-    kg: 1000,
     g: 1,
-    mg: 0.001,
-    lb: 0.453592,
-    oz: 0.0283495,
+    mg: 1000,
+    lb: 0.00220462,
+    oz: 0.035274,
+    kg: 0.001,
   },
   temperature: { "°C": 1, "°F": 33.8, K: 274.15 },
 };
@@ -50,7 +50,19 @@ const Form = ({ type }) => {
 
   const calculate = (e) => {
     e.preventDefault();
-    console.log(value, from, to);
+    if (type == "length") {
+      const valueInMeters = value * (1 / values.length[from]);
+      const finalValue = valueInMeters * values.length[to];
+      console.log(finalValue);
+    } else if (type == "weight") {
+      const valueInGrams = value * (1 / values.weight[from]);
+      const finalValue = valueInGrams * values.weight[to];
+      console.log(finalValue);
+    } else if (type == "temperature") {
+      const valueInCelsius = value * (1 / values.temperature[from]);
+      const finalValue = valueInCelsius * values.temperature[to];
+      console.log(finalValue);
+    }
   };
 
   return (
@@ -67,6 +79,7 @@ const Form = ({ type }) => {
               placeholder="300"
               onChange={(e) => setValue(e.target.value)}
               className="border rounded-lg w-full p-2.5"
+              required
             />
           </div>
           <div className="grid gap-2">
@@ -77,7 +90,9 @@ const Form = ({ type }) => {
               onChange={(e) => setFrom(e.target.value)}
               value={from}
               className="rounded-lg w-full border border-gray-600 placeholder-gray-400 p-2.5"
+              required
             >
+              <option>Select a unit</option>
               {Object.entries(unities[type]).map(([key, value]) => (
                 <option key={key} value={value}>
                   {key}
@@ -93,7 +108,9 @@ const Form = ({ type }) => {
               onChange={(e) => setTo(e.target.value)}
               value={to}
               className="rounded-lg w-full border border-gray-600 placeholder-gray-400 p-2.5"
+              required
             >
+              <option>Select a unit</option>
               {Object.entries(unities[type]).map(([key, value]) => (
                 <option key={key} value={value}>
                   {key}
