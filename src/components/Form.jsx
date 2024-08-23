@@ -1,4 +1,5 @@
 import { useState } from "react";
+import Result from "./Result";
 
 const unities = {
   length: {
@@ -40,7 +41,7 @@ const values = {
     oz: 0.035274,
     kg: 0.001,
   },
-  temperature: { "°C": 1, "°F": 33.8, "K": 274.15 },
+  temperature: { "°C": 1, "°F": 33.8, K: 274.15 },
 };
 
 const Form = ({ type }) => {
@@ -48,6 +49,7 @@ const Form = ({ type }) => {
   const [from, setFrom] = useState("");
   const [to, setTo] = useState("");
   const [result, setResult] = useState(null);
+  const [resultPanel, setResultPanel] = useState(false);
 
   const calculate = (e) => {
     e.preventDefault();
@@ -65,79 +67,76 @@ const Form = ({ type }) => {
     }
 
     setResult(finalValue);
+    setResultPanel(true);
   };
 
   return (
-    <div className="p-6 space-y-6 md:space-y-8 sm:p-8">
-      <form onSubmit={calculate}>
-        <div className="space-y-6 md:space-y-8 mb-10">
-          <div className="grid gap-2">
-            <label className="text-sm font-medium text-white">
-              Enter the {type} to convert
-            </label>
-            <input
-              value={value}
-              type="number"
-              placeholder="300"
-              onChange={(e) => setValue(e.target.value)}
-              className="border rounded-lg w-full p-2.5"
-              required
-            />
-          </div>
-          <div className="grid gap-2">
-            <label className="text-sm font-medium text-white">
-              Unit to convert from
-            </label>
-            <select
-              onChange={(e) => setFrom(e.target.value)}
-              value={from}
-              className="rounded-lg w-full border border-gray-600 placeholder-gray-400 p-2.5"
-              required
-            >
-              <option>Select a unit</option>
-              {Object.entries(unities[type]).map(([key, value]) => (
-                <option key={key} value={value}>
-                  {key}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div className="grid gap-2">
-            <label className="text-sm font-medium text-white">
-              Unit to convert to
-            </label>
-            <select
-              onChange={(e) => setTo(e.target.value)}
-              value={to}
-              className="rounded-lg w-full border border-gray-600 placeholder-gray-400 p-2.5"
-              required
-            >
-              <option>Select a unit</option>
-              {Object.entries(unities[type]).map(([key, value]) => (
-                <option key={key} value={value}>
-                  {key}
-                </option>
-              ))}
-            </select>
-          </div>
-        </div>
-        <div className="flex w-full items-center justify-center">
-          <button className="text-sm rounded-lg bg-blue-600 w-[70%] text-white font-medium px-5 py-2.5">
-            Convert
-          </button>
-        </div>
-      </form>
-      {result && (
-        <div className="w-full rounded-lg shadow border md:mt-0 sm:max-w-md xl:p-0 bg-gray-800 border-gray-700">
-          <p className="text-sm font-medium text-white">
-            Result of your calculation:
-          </p>
-          <p className="text-sm font-medium text-white">
-            {value} {from} = {result} {to}
-          </p>
+    <>
+      {resultPanel ? (
+        <Result value={value} from={from} to={to} result={result} setResultPanel={setResultPanel} />
+      ) : (
+        <div className="p-6 space-y-6 md:space-y-8 sm:p-8">
+          <form onSubmit={calculate}>
+            <div className="space-y-6 md:space-y-8 mb-10">
+              <div className="grid gap-2">
+                <label className="text-sm font-medium text-white">
+                  Enter the {type} to convert
+                </label>
+                <input
+                  value={value}
+                  type="number"
+                  placeholder="300"
+                  onChange={(e) => setValue(e.target.value)}
+                  className="border rounded-lg w-full p-2.5"
+                  required
+                />
+              </div>
+              <div className="grid gap-2">
+                <label className="text-sm font-medium text-white">
+                  Unit to convert from
+                </label>
+                <select
+                  onChange={(e) => setFrom(e.target.value)}
+                  value={from}
+                  className="rounded-lg w-full border border-gray-600 placeholder-gray-400 p-2.5"
+                  required
+                >
+                  <option>Select a unit</option>
+                  {Object.entries(unities[type]).map(([key, value]) => (
+                    <option key={key} value={value}>
+                      {key}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className="grid gap-2">
+                <label className="text-sm font-medium text-white">
+                  Unit to convert to
+                </label>
+                <select
+                  onChange={(e) => setTo(e.target.value)}
+                  value={to}
+                  className="rounded-lg w-full border border-gray-600 placeholder-gray-400 p-2.5"
+                  required
+                >
+                  <option>Select a unit</option>
+                  {Object.entries(unities[type]).map(([key, value]) => (
+                    <option key={key} value={value}>
+                      {key}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+            <div className="flex w-full items-center justify-center">
+              <button className="text-sm rounded-lg bg-blue-600 w-[70%] text-white font-medium px-5 py-2.5">
+                Convert
+              </button>
+            </div>
+          </form>
         </div>
       )}
-    </div>
+    </>
   );
 };
 
