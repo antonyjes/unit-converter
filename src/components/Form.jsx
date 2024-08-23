@@ -40,29 +40,31 @@ const values = {
     oz: 0.035274,
     kg: 0.001,
   },
-  temperature: { "°C": 1, "°F": 33.8, K: 274.15 },
+  temperature: { "°C": 1, "°F": 33.8, "K": 274.15 },
 };
 
 const Form = ({ type }) => {
   const [value, setValue] = useState(0);
   const [from, setFrom] = useState("");
   const [to, setTo] = useState("");
+  const [result, setResult] = useState(null);
 
   const calculate = (e) => {
     e.preventDefault();
+    let finalValue;
+
     if (type == "length") {
       const valueInMeters = value * (1 / values.length[from]);
-      const finalValue = valueInMeters * values.length[to];
-      console.log(finalValue);
+      finalValue = valueInMeters * values.length[to];
     } else if (type == "weight") {
       const valueInGrams = value * (1 / values.weight[from]);
-      const finalValue = valueInGrams * values.weight[to];
-      console.log(finalValue);
+      finalValue = valueInGrams * values.weight[to];
     } else if (type == "temperature") {
       const valueInCelsius = value * (1 / values.temperature[from]);
-      const finalValue = valueInCelsius * values.temperature[to];
-      console.log(finalValue);
+      finalValue = valueInCelsius * values.temperature[to];
     }
+
+    setResult(finalValue);
   };
 
   return (
@@ -125,6 +127,16 @@ const Form = ({ type }) => {
           </button>
         </div>
       </form>
+      {result && (
+        <div className="w-full rounded-lg shadow border md:mt-0 sm:max-w-md xl:p-0 bg-gray-800 border-gray-700">
+          <p className="text-sm font-medium text-white">
+            Result of your calculation:
+          </p>
+          <p className="text-sm font-medium text-white">
+            {value} {from} = {result} {to}
+          </p>
+        </div>
+      )}
     </div>
   );
 };
